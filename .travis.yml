@@ -2,7 +2,7 @@ language: julia
 os: linux
 
 julia:
-        - 0.4
+        - 0.5
 python: "2.7"
 
 notifications:
@@ -18,19 +18,15 @@ install:
         - sudo pip install --upgrade pip
         - sudo apt-get install -y gcc
         - sudo apt-get install -y python-numpy python-matplotlib python-h5py
-        - sudo pip install numpy h5py tifffile 
-        - sudo pip install cython 
-        - julia -e 'Pkg.add("HDF5"); Pkg.add("Compose"); Pkg.add("PyPlot")'
+        - sudo pip install numpy h5py tifffile
+        - sudo pip install cython
+        - julia -e 'Pkg.add("HDF5"); Pkg.add("Compose");'
         - git clone https://github.com/seung-lab/EMIRT.jl.git
-        - mv EMIRT.jl ~/.julia/v0.4/EMIRT
+        - mv EMIRT.jl ~/.julia/v0.5/EMIRT
         - git clone https://github.com/seung-lab/Watershed.jl.git
-        - mv Watershed.jl ~/.julia/v0.4/Watershed
-        - cd /usr/local/lib/python2.7/dist-packages/
-        - sudo git clone https://github.com/seung-lab/segascorus.git
-        - cd segascorus; sudo make
-        - sudo mv ~__init__.py~ __init__.py
+        - mv Watershed.jl ~/.julia/v0.5/Watershed
 
 script:
-        - cd ~/.julia/v0.4/EMIRT
-        - git checkout parallel
+        - cd ~/.julia/v0.5/EMIRT
+        - git checkout chunks
         - julia -e 'Pkg.test("EMIRT")'
