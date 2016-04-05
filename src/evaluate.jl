@@ -7,7 +7,7 @@ include("domains.jl")
 # use a log version which is faster and more accurate
 import Base.Math.JuliaLibm.log
 
-import PyCall.@pyimport
+#import PyCall.@pyimport
 
 # rand error curve
 function affs_error_curve(affs::Taffs, lbl::Tseg, dim=3, step=0.1, seg_method="watershed", is_patch=false, is_remap=true)
@@ -186,6 +186,7 @@ function affs_fr_rand_errors(affs::Taffs, lbl::Tseg, thds::Array=Array(linspace(
     return res, mes, ses
 end
 
+#=
 """
 compute the segmentation metrics using python segerror package
 https://github.com/seung-lab/segascorus
@@ -199,6 +200,7 @@ function pysegerror(seg::Array, lbl::Array, is_fr=true, is_selfpair=true)
     ret["VIFS"], ret["VIFSm"], ret["VIFSs"] = serror.seg_fr_variation_f_score(seg, lbl, true, true)
     return ret
 end
+=#
 
 function segerror(seg::Array, lbl::Array, is_fr=true, is_selfpair=true)
     ret = Dict{ASCIIString, Float32}()

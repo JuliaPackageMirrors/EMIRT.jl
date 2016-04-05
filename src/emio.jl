@@ -1,6 +1,6 @@
 using HDF5
-using PyCall
-using Compose
+#using PyCall
+#using Compose
 
 export img2svg, imread, imsave, ecread
 
@@ -10,13 +10,13 @@ function imread(fname)
         ret =  h5read(fname, "/main")
         println("done :)")
         return ret
-    elseif contains(fname, ".tif")
+#=    elseif contains(fname, ".tif")
         @pyimport tifffile
         vol = tifffile.imread(fname)
         # transpose the dims from z,y,x to x,y,z
         vol = permutedims(vol, Array(ndims(vol):-1:1))
         println("done :)")
-        return vol
+        return vol =#
     else
         error("invalid file type! only support hdf5 and tif now.")
     end
@@ -31,17 +31,18 @@ function imsave(vol::Array, fname, is_overwrite=true)
 
     if contains(fname, ".h5") || contains(fname, ".hdf5")
         h5write(fname, "/main", vol)
-    elseif contains(fname, ".tif")
+#=    elseif contains(fname, ".tif")
 
         @pyimport tifffile
         tifffile.imsave(fname, vol)
-        # emio.imsave(vol, fname)
+        # emio.imsave(vol, fname) =#
     else
         error("invalid image format! only support hdf5 and tif now.")
     end
     println("done!")
 end
 
+#=
 """
 save image as svg file
 
@@ -51,6 +52,7 @@ function img2svg( img::Array, fname )
     v = reshape( img, length(img))
     draw(SVG(fname, 3inch, 3inch), compose(context(), bitmap("image/png", Array{UInt8}(v), 0, 0, 1, 1)))
 end
+=#
 
 """
 read the evaluation curve in a hdf5 file
