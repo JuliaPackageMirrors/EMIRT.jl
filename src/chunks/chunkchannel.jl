@@ -3,14 +3,7 @@
 #"""
 import Base: put!, wait, isready, take!, fetch
 
-# type of chunk
-type Tchk
-    # chunk volume
-    chk::Array
-    # coordinate of chunk origin
-    crdt = Vector{Integer}
-    Tchk( tp::DataType, sz::Tuple, crdt::Vector{Integer}=[0,0,0] ) = new( Array{tp,sz}([]), crdt )
-end
+include("types.jl")
 
 type ChunkChannel <: AbstractChannel
     # maximum number of chunks

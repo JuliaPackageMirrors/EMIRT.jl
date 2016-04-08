@@ -2,6 +2,8 @@ using HDF5
 #using PyCall
 #using Compose
 
+include("types.jl")
+
 export img2svg, imread, imsave, ecread
 
 function imread(fname)
@@ -20,6 +22,43 @@ function imread(fname)
     else
         error("invalid file type! only support hdf5 and tif now.")
     end
+end
+
+"""
+read a chunk from a big hdf5 file
+`Inputs:`
+fname: file name of hdf5 file
+start: start coordinate of chunk
+stop:  stop coordinate of the chunk
+path: the dataset path inside the hdf5 file
+
+`Outputs:`
+chk: the cutout chunk
+"""
+function imread(fname, start::Tcrdt, stop::Tcrdt, path="/main")
+    @assert ishdf5(fname)
+    @assert length(start) == length(stop)
+    f = h5open(fname, "r")
+    # the dataset
+    vol = f[path]
+    @assert ndims(vol)==length(start)
+    # number of dimension
+    nd = length(start)
+    # get the chunk
+    if nd==1
+        chk = vol[start[1]:stop[1]]
+    elseif nd==2
+        chk = vol[start[1]:stop[1], start[2]:stop[2]]
+    elseif nd==3
+        chk = vol[start[1]:stop[1], start[2]:stop[2], start[3]:stop[3]]
+    elseif nd==4
+        chk = vol[start[1]:stop[1], start[2]:stop[2], start[3]:stop[3], start[4]:stop[4]]
+    else
+        error("unsupported volume dimension: $(nd)")
+    end
+    close(f)
+    # return a chunk type
+    return Tchk(chk, start)
 end
 
 function imsave(vol::Array, fname, is_overwrite=true)
